@@ -14,9 +14,9 @@ N = 100
 h=2/N
 integral_result = 0
 for k in range(1,N+1):
-    xk = -1 + h*k 
-    yk = math.sqrt(1-(xk**2))
- 	integral_result += h*yk
+      xk = -1 + h*k 
+      yk = math.sqrt(1-(xk**2))
+      integral_result += h*yk
 print(f"Actual Value: {math.pi*0.5}")
 print(f"Result using Riemman integral (N={N}): {integral_result}")
 #2. 
@@ -33,5 +33,7 @@ for k in range(1,N+1):
 #Time the end of the loop
 end_time = time()
 print(f"Time measured: {end_time-start_time} seconds")
+print(f"Actual Value: {math.pi*0.5}")
+print(f"Result using Riemman integral (N={N}): {integral_result}")
 print(f"Actual Value: {math.pi*0.5}")
 print(f"Result using Riemman integral (N={N}): {integral_result}")
