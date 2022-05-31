@@ -95,6 +95,13 @@ for t in tpoints:
    k4 = h*f(r+k3,t+h)
    r += (k1+2*k2+2*k3+k4)/6
 # Plot the results
-plot(tpoints,theta)
-xlabel("t")
-show()
+for i in range(0,240):
+	filename = str(f)+'.png'
+	plt.figure()
+	plt.plot(r)
+	plt.xlim([0,20])
+	plt.ylim([0,20])
+	plt.savefig(filename)
+plt.plot(t,theta[:,0])
+plt.plot(t,theta[:,1])
+plt.show()
