@@ -63,45 +63,71 @@ xlabel('m')
 ylabel('x')
 show()
 #Exercise 8.4:
+!pip install vpython
 from math import sin,pi
 from numpy import array,arange
 from pylab import plot,xlabel,show
-# Define some constants
+from vpython import *
+def f(r,t):
+    theta = r[0]
+    omega = r[1]
+    ftheta = omega
+    fomega = -g/l*sin(theta)
+    return array([ftheta,fomega],float)
 g = 9.81
 l = 0.1
-# Define the function
-def f(r,t):
-   theta = r[0]
-   omega = r[1]
-   ftheta = omega
-   fomega = -g/l*sin(theta)
-   return array([ftheta,fomega],float)
-# Set up the variables
 a = 0.0
 b = 10.0
 N = 3000
 h = (b-a)/N
-# Create the arrays
 tpoints = arange(a,b,h)
 theta = []
-# Initial conditions
 r = array([179/180*pi,0],float)
-# Loop through the calculations
 for t in tpoints:
-   theta.append(r[0])
-   k1 = h*f(r,t)
-   k2 = h*f(r+0.5*k1,t+0.5*h)
-   k3 = h*f(r+0.5*k2,t+0.5*h)
-   k4 = h*f(r+k3,t+h)
-   r += (k1+2*k2+2*k3+k4)/6
-# Plot the results
-for i in range(0,240):
-	filename = str(f)+'.png'
-	plt.figure()
-	plt.plot(r)
-	plt.xlim([0,20])
-	plt.ylim([0,20])
-	plt.savefig(filename)
-plt.plot(t,theta[:,0])
-plt.plot(t,theta[:,1])
-plt.show()
+    theta.append(r[0])
+    k1 = h*f(r,t)
+    k2 = h*f(r+0.5*k1,t+0.5*h)
+    k3 = h*f(r+0.5*k2,t+0.5*h)
+    k4 = h*f(r+k3,t+h)
+    r += (k1+2*k2+2*k3+k4)/6
+plot(tpoints,theta)
+#plot(tpoints,ypoints)
+xlabel("t")
+show()
+class pendulum_xyz:
+	def __init__(self,length):
+		self.length = length
+		from vpython import sphere, cylinder,box,color
+		self.cylinder = cylinder(radius =0.1) 
+		#self.cylinder.axis = self.x,self.y,self.z
+		self.sphere = sphere(radius=0.5)
+		self.sphere.color = color.red
+		#self.sphere.pos = self.x,self.y,self.z
+		#self.update_pos()
+		self.box = box(lenght=2,width=2,height=0.1)
+		self.box.pos = 0,0,-0.1/2
+		#self.pos = pos
+		self.setpos([0,length,0]) 
+		#d = display()
+	@property
+	def getpos(self):
+		print('Getting position')
+		return self._pos
+	def setpos(self,pos):
+		pos[1]=-pos[1]
+		print('Position set to {}'.format(pos))
+		self._pos = pos
+		self.cylinder.axis = pos
+		self.sphere.pos = pos
+	#pos = property(getpos,setpos)
+class pendulum_theta(pendulum_xyz):
+	from cmath import exp
+	#def __init__(self)
+	def angle(self,theta):
+		r = self.length*exp(1j*theta)
+		self.setpos([r.imag,r.real,0])	
+p = pendulum_theta(10)
+from vpython import rate
+for t,angle in zip(tpoints,theta)[::10]:
+	rate(240)
+	p.angle(angle)
