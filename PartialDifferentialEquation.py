@@ -44,10 +44,14 @@ b1 =  1 - h*hbar/2/M/a**2*1j
 b2 =  h*hbar*1j/4/M/a**2
 ksi = zeros(N+1,complex)
 def ksi0(x):
-	x0 = L/2
-	sigma = 1e-10
-	k = 5e10
-	return exp(-(x-x0)**2/2/sigma**2)*(np.exp(1j*k*x))
+  x0 = L/2
+  sigma = 1e-10
+  k = 5e10
+  return_this = []
+  for val in x:
+    new = exp(-(val-x0)**2/2/sigma**2)*(np.exp(1j*k*val))
+    return_this.append(new)
+  return np.asarray(return_this)
 x = linspace(0,L,N+1)
 ksi[:] = ksi0(x)
 ksi[[0,N]]=0
@@ -60,7 +64,7 @@ ksi_c = curve()
 ksi_c.set_x(x-L/2)
 #ksi = banded(A,v,1,1)
 while True:
-	rate(30)
+	rate(39)
 	ksi_c.set_y(real(ksi)*1e-9)
 	ksi_c.set_z(imag(ksi)*1e-9)	
 	for i in range(20):
